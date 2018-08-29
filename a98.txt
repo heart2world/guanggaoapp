@@ -1,0 +1,12 @@
+array (
+  'appid' => 'wxc350dab77ece49d1',
+  'body' => '嘉鑫辉广告材料',
+  'mch_id' => '1513378551',
+  'nonce_str' => 'yvcCS8djQFwu4ahDgD82OlAQb4kkN4wX',
+  'notify_url' => 'http://jxh.heart2world.com/home/pay/jsApiCall',
+  'out_trade_no' => '20180829519851501535524685',
+  'spbill_create_ip' => '113.251.21.183',
+  'total_fee' => '1',
+  'trade_type' => 'APP',
+  'sign' => 'A218D90277089819E955BD8192D5D2CE',
+)

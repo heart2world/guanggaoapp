@@ -1,0 +1,1 @@
+a:7:{i:0;s:6:"log_id";i:1;s:7:"ordersn";i:2;s:11:"orderamount";i:3;s:9:"ordertype";i:4;s:6:"ispaid";s:3:"_pk";s:6:"log_id";s:5:"_type";a:5:{s:6:"log_id";s:16:"int(10) unsigned";s:7:"ordersn";s:11:"varchar(50)";s:11:"orderamount";s:22:"decimal(10,2) unsigned";s:9:"ordertype";s:19:"tinyint(1) unsigned";s:6:"ispaid";s:19:"tinyint(1) unsigned";}}

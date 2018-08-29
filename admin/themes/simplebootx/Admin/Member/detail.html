@@ -1,0 +1,70 @@
+<admintpl file="header" />
+<style type="text/css">
+.pic-list li {
+	margin-bottom: 5px;
+}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap" id="app">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('Member/index')}">会员列表</a></li>
+			<li class="active"><a href="javascript:;">会员详情</a></li>
+		</ul>
+		<form class="form-horizontal" id="tagforms" method="post" enctype="multipart/form-data">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">头像：</label>
+					<div class="controls">
+						<if condition="$member['avatar'] neq ''">
+							<img src="{$member.avatar}" style="width: 100px;" />
+						<else/>
+							<img src="__TMPL__Public/assets/images/default-thumbnail.png" style="width: 100px;" />
+						</if>
+					</div>
+				</div>	
+				<div class="control-group">
+					<label class="control-label">姓名：</label>
+					<div class="controls" style="margin-top: 5px;">
+						<span>{$member.nicename}</span>
+					</div>
+				</div>	
+				<div class="control-group">
+					<label class="control-label">手机号：</label>
+					<div class="controls" style="margin-top: 5px;">
+						<span>{$member.mobile}</span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">职务：</label>
+					<div class="controls" style="margin-top: 5px;">
+						<span><if condition="$member['duty'] neq ''">{$member.duty}<else/>未填写</if></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">邮箱：</label>
+					<div class="controls" style="margin-top: 5px;">
+						<span><if condition="$member['email'] neq ''">{$member.email}<else/>未填写</if></span>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">所属公司：</label>
+					<div class="controls">
+						<if condition="$member['address'] eq 1">
+						<div>
+							<span style="margin-left: 5px;">重庆心联宇科技有限公司 <br/>重庆市渝中区大坪万科中心4栋30-17</span>
+						</div>
+						<else/>
+						<div>
+							<span style="margin-left: 5px;">成都迪英特科技有限公司 <br/>四川省成都市金牛区二环路北一段111号创新中心</span>
+						</div>
+						</if>
+					</div>
+				</div>	
+				<hr/>				
+			</fieldset>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

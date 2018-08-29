@@ -1,0 +1,223 @@
+<admintpl file="header" />
+</head>
+<link href="__PUBLIC__/js/jedate/skin/jedate.css" rel="stylesheet">
+<style>
+	.laydate-icon {
+		background: url('/public/js/jedate/skin/jedate.png') no-repeat right;
+	}
+
+	.time {
+		width: 249px;
+		height: 15px;
+		line-height: 15px;
+		padding: 6px 0 6px 10px;
+		border: 1px solid #C1C1C1;
+	}
+
+	.table tr th, .table tr td {
+		text-align: center;
+	}
+</style>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">订单管理</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('Orders/index')}">
+			订单号：<input type="text" name="orderno" style="width: 150px;" value="{$orderno}" placeholder="请输入订单号">&nbsp;
+			时间：
+			<input class="time laydate-icon" type="text" name="start_time" autocomplete="off" id="start_time" style="cursor: pointer;width: 165px;" placeholder="请选择日期" value="{$start_time}">
+			<input class="time laydate-icon" type="text" name="end_time" autocomplete="off" id="end_time" style="cursor: pointer;width: 165px;" placeholder="请选择日期" value="{$end_time}">&nbsp;
+			状态：<select name="status" id="status" style="width: 100px;">
+					<option value="">全部</option>
+					<option value="2">待支付</option>
+					<option value="3">待发货</option>
+					<option value="4">待收货</option>
+					<option value="1">已完成</option>
+		  	 	 </select>&nbsp;&nbsp;
+			支付方式：<select name="paytype" id="paytype" style="width: 110px;">
+						<option value="">全部</option>
+						<option value="3">余额支付</option>
+						<option value="1">微信支付</option>
+						<option value="2">支付宝支付</option>
+						<option value="4">赊账</option>
+						<option value="5">赊账/已还款</option>
+					</select>&nbsp;&nbsp;
+			<input name="mid" type="hidden" value="{$mid}">
+			<input type="submit" class="btn btn-primary" value="查询" />
+			<a class="btn btn-danger" href="{:U('Orders/export',array('orderno'=>$orderno,'start_time'=>$start_time,'end_time'=>$end_time,'status'=>$status,'paytype'=>$paytype,'member_id'=>$mid))}">导出Excel</a>
+		</form>
+		<form class="js-ajax-form" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th style="min-width: 30px;text-align: center;">ID</th>
+						<th style="min-width: 100px;text-align: center;">时间</th>
+						<th style="min-width: 150px;text-align: center;">订单号</th>
+						<th style="min-width: 100px;text-align: center;">商品名称</th>
+						<th style="min-width: 30px;text-align: center;">数量</th>
+						<th style="min-width: 100px;text-align: center;">购买者</th>
+						<th style="min-width: 100px;text-align: center;">实付金额</th>
+						<th style="min-width: 100px;text-align: center;">支付方式</th>
+						<th style="min-width: 50px;text-align: center;">状态</th>
+						<th style="min-width: 200px;text-align: center;">操作</th>
+					</tr>
+				</thead>
+				<foreach name="list" item="vo">
+				<tr>
+                    <td style="text-align: center;">{$vo.id}</td>
+                    <td style="text-align: center;"><?= date("Y-m-d H:i:s",$vo['create_time']) ?></td>
+                    <td style="text-align: center;">{$vo.orderno}</td>
+                    <td style="text-align: center;">{$vo.goods_name}</td>
+                    <td style="text-align: center;">{$vo.number}</td>
+					<td style="text-align: center;">
+						{$vo.nickname}<if condition="$vo['remark1'] neq ''">({$vo.remark1})</if><br/>{$vo.mobile}
+					</td>
+                    <td style="text-align: center;">￥{$vo.paymoney}</td>
+                    <td style="text-align: center;">
+						<if condition="$vo.paytype eq 1">
+							微信支付
+						</if>
+						<if condition="$vo.paytype eq 2">
+							支付宝支付
+						</if>
+						<if condition="$vo.paytype eq 3">
+							余额支付
+						</if>
+						<if condition="$vo.paytype eq 4">
+							赊账
+						</if>
+						<if condition="$vo.paytype eq 5">
+							赊账/已还款
+						</if>
+					</td>
+                    <td style="text-align: center;">
+						<if condition="$vo.status eq 1">
+							已完成
+						</if>
+						<if condition="$vo.status eq 2">
+							待支付
+						</if>
+						<if condition="$vo.status eq 3">
+							待发货
+						</if>
+						<if condition="$vo.status eq 4">
+							待收货
+						</if>
+					</td>
+                    <td style="text-align: center;">
+						<a class="btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;" href="{:U('Orders/detail',array('id'=>$vo['id']))}">查看详情</a>
+						<if condition="$vo.status eq 3">
+							<a class="btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;" onclick="confirm_deliver('{$vo.id}')">确认发货</a>
+						</if>
+						<if condition="$vo.status eq 4">
+							<a class="btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;" onclick="confirm_take_deliver('{$vo.id}')">确认收货</a>
+						</if>
+						<if condition="$vo.paytype eq 4">
+							<a class="btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;" onclick="refund('{$vo.id}')">已付款</a>
+						</if>
+					</td>
+				</tr>
+				</foreach>
+				<if condition="count($list) eq 0">
+					<tr><td colspan="10">暂无数据</td></tr>
+				</if>
+			</table>
+			<div class="pagination" style="float: right;">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/jedate/jedate.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+	<script type="text/javascript">
+        document.getElementById('status').value='{$status}';
+        document.getElementById('paytype').value='{$paytype}';
+        $(function () {
+            jeDate("#start_time",{
+                theme:{bgcolor:"#00A680",pnColor:"#00DDAA"},
+                format: "YYYY-MM-DD hh:mm:ss",
+            });
+            jeDate("#end_time",{
+                theme:{bgcolor:"#00A680",pnColor:"#00DDAA"},
+                format: "YYYY-MM-DD hh:mm:ss",
+            });
+        });
+
+        //已付款
+        function refund(id) {
+            layer.msg('是否确认已还款？', {
+                time: 0 //不自动关闭
+                ,btn: ['确定', '取消']
+                ,yes:function () {
+                    $.ajax({
+                        url:'{:U("Orders/refund")}',
+                        data:{id:id,paytype:5},
+                        type:'POST',
+                        dataType:'json',
+                        success:function (res) {
+                            if (res.code == 1) {
+                                // layer.alert('操作成功', {icon: 6});
+                                // $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                                setTimeout("location.reload()",1000);
+                            }else {
+                                $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                            }
+                        }
+                    })
+                }
+			});
+        }
+
+        //确认发货
+        function confirm_deliver(id) {
+            layer.msg('是否确认发货？', {
+                time: 0 //不自动关闭
+                ,btn: ['确定', '取消']
+                ,yes:function () {
+                    $.ajax({
+                        url:'{:U("Orders/change_status")}',
+                        data:{id:id,status:4},
+                        type:'POST',
+                        dataType:'json',
+                        success:function (res) {
+                            if (res.code == 1) {
+                                // layer.alert('操作成功', {icon: 6});
+                                // $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                                setTimeout("location.reload()",1000);
+                            }else {
+                                $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                            }
+                        }
+                    })
+                }
+            });
+        }
+
+        //确认收货
+        function confirm_take_deliver(id) {
+            layer.msg('是否确认收货？', {
+                time: 0 //不自动关闭
+                ,btn: ['确定', '取消']
+                ,yes:function () {
+                    $.ajax({
+                        url:'{:U("Orders/change_status")}',
+                        data:{id:id,status:1},
+                        type:'POST',
+                        dataType:'json',
+                        success:function (res) {
+                            if (res.code == 1) {
+                                // layer.alert('操作成功', {icon: 6});
+                                // $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                                setTimeout("location.reload()",1000);
+                            }else {
+                                $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                            }
+                        }
+                    })
+                }
+            });
+        }
+	</script>
+</body>
+</html>

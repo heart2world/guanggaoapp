@@ -1,0 +1,107 @@
+<admintpl file="header" />
+</head>
+<link href="__PUBLIC__/js/jedate/skin/jedate.css" rel="stylesheet">
+<style>
+	.laydate-icon {
+		background: url('/public/js/jedate/skin/jedate.png') no-repeat right;
+	}
+
+	.time {
+		width: 249px;
+		height: 15px;
+		line-height: 15px;
+		padding: 6px 0 6px 10px;
+		border: 1px solid #C1C1C1;
+	}
+
+	.table tr th, .table tr td {
+		text-align: center;
+	}
+</style>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">充值记录</a></li>
+			<li><a href="{:U('Recharge/recharge_config')}">充值设置</a></li>
+			<li><a href="{:U('Recharge/balance_statement')}">余额明细</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('Recharge/index')}">
+			昵称：<input type="text" id="nickname" name="nickname" autocomplete="off" style="width: 165px;" value="{$nickname}" placeholder="请输入用户名...">&nbsp;&nbsp;
+			时间：
+			<input class="time laydate-icon" type="text" name="start_time"  autocomplete="off" id="start_time" style="cursor: pointer;width: 165px;" placeholder="请选择日期" value="{$start_time}">
+			<input class="time laydate-icon" type="text" name="end_time" autocomplete="off" id="end_time" style="cursor: pointer;width: 165px;" placeholder="请选择日期" value="{$end_time}">&nbsp;&nbsp;
+			<input type="submit" class="btn btn-primary" value="查询" />
+			<a class="btn btn-primary" href="{:U('Recharge/index')}">清空</a>
+			<a class="btn btn-danger" href="{:U('Recharge/export',array('nickname'=>$nickname,'start_time'=>$start_time,'end_time'=>$end_time))}" download="">导出Excel</a>
+		</form>
+		<form class="js-ajax-form" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th style="min-width: 30px;text-align: center;">ID</th>
+						<th style="min-width: 100px;text-align: center;">时间</th>
+						<th style="min-width: 150px;text-align: center;">充值单号</th>
+						<th style="min-width: 100px;text-align: center;">会员</th>
+						<th style="min-width: 30px;text-align: center;">充值金额</th>
+						<th style="min-width: 100px;text-align: center;">实付到账</th>
+						<th style="min-width: 100px;text-align: center;">支付方式</th>
+						<th style="min-width: 50px;text-align: center;">状态</th>
+					</tr>
+				</thead>
+				<foreach name="list" item="vo">
+				<tr>
+                    <td style="text-align: center;">{$vo.id}</td>
+                    <td style="text-align: center;"><?= date("Y-m-d H:i:s",$vo['create_time']) ?></td>
+                    <td style="text-align: center;">{$vo.recharge_no}</td>
+					<td style="text-align: center;">{$vo.nickname}/{$vo.mobile}</td>
+                    <td style="text-align: center;">￥{$vo.recharge_amount}</td>
+                    <td style="text-align: center;">￥{$vo.account_money}</td>
+                    <td style="text-align: center;">
+						<if condition="$vo.pay_type eq 1">
+							微信支付
+						</if>
+						<if condition="$vo.pay_type eq 2">
+							支付宝支付
+						</if>
+						<if condition="$vo.pay_type eq ''">
+							—— ——
+						</if>
+					</td>
+                    <td style="text-align: center;">
+						<if condition="$vo.status eq 1">
+							成功
+						</if>
+						<if condition="$vo.status eq 2">
+							失败
+						</if>
+						<if condition="$vo.status eq 0">
+							未支付
+						</if>
+					</td>
+				</tr>
+				</foreach>
+				<if condition="count($list) eq 0">
+					<tr><td colspan="10">暂无数据</td></tr>
+				</if>
+			</table>
+			<div class="pagination" style="float: right;">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/jedate/jedate.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+	<script type="text/javascript">
+        $(function () {
+            jeDate("#start_time",{
+                theme:{bgcolor:"#00A680",pnColor:"#00DDAA"},
+                format: "YYYY-MM-DD hh:mm:ss",
+            });
+            jeDate("#end_time",{
+                theme:{bgcolor:"#00A680",pnColor:"#00DDAA"},
+                format: "YYYY-MM-DD hh:mm:ss",
+            });
+        });
+	</script>
+</body>
+</html>

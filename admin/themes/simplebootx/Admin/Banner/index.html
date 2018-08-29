@@ -1,0 +1,54 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">轮播图管理</a></li>
+			<li><a href="{:U('Banner/add')}">添加轮播图</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('Banner/index')}">	
+			标题： 
+			<input type="text" name="keyword" style="width: 200px;" value="{$formget.keyword|default=''}" placeholder="请输入关键字...">&nbsp;&nbsp;
+			
+			<input type="submit" class="btn btn-primary" value="查询" />
+			<a class="btn btn-danger" href="{:U('Banner/index')}">清空</a>
+		</form>
+		<form class="js-ajax-form" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th style="min-width: 50px;text-align: center;">ID</th>
+						<th style="min-width: 100px;text-align: center;">标题</th>
+						<th style="min-width: 150px;text-align: center;">缩略图</th>
+						<th style="min-width: 30px;text-align: center;">排序</th>
+						<th style="min-width: 50px;text-align: center;">状态</th>						
+						<th style="min-width: 200px;text-align: center;">操作</th>
+					</tr>
+				</thead>
+				<foreach name="posts" item="vo">
+				<tr>
+                    <td style="text-align: center;"><b>{$vo.id}</b></td>
+					<td style="text-align: center;">{$vo.title}</td>
+					<td style="text-align: center;"><a herf="{$vo.post_img2}" target="_blank"><img src="{$vo.post_img2}" width="100px" /></a></td>
+					<td style="text-align: center;">{$vo.sortorder}</td>
+					<td style="text-align: center;"><if condition="$vo['status'] eq 1">上架<else/>下架</if></td>					
+					<td style="text-align: center;">
+						<a href="{:U('Banner/delete',array('id'=>$vo['id']))}" class="btn btn-primary js-ajax-delete" style="padding: 2px 15px;color: white;background-color: #1dccaa;">{:L('DELETE')}</a>
+						<a href="{:U('Banner/edit',array('id'=>$vo['id']))}" class="btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;">{:L('EDIT')}</a>  						
+						<if condition="$vo['status'] eq 1">
+							<a href="{:U('Banner/ban',array('id'=>$vo['id']))}" class="btn btn-primary js-ajax-dialog-btn" style="padding: 2px 15px;color: white;background-color: #1dccaa;"  data-msg="确认下架该轮播图吗？">下架</a> 
+						<else />
+							<a href="{:U('Banner/cancelban',array('id'=>$vo['id']))}" class="btn btn-primary js-ajax-dialog-btn" style="padding: 2px 15px;color: white;background-color: #1dccaa;"  data-msg="确认上架该轮播图吗？">上架</a> 
+						</if> 
+						
+					</td>
+				</tr>
+				</foreach>				
+			</table>
+			<div class="pagination" style="float: right;">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	
+</body>
+</html>

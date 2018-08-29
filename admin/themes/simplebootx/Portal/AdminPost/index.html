@@ -1,0 +1,130 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="javascript:;">{:L('PORTAL_ADMINPOST_INDEX')}</a></li>
+			<li><a href="{:U('AdminPost/add',array('term'=>empty($term['term_id'])?'':$term['term_id']))}" target="_self">{:L('PORTAL_ADMINPOST_ADD')}</a></li>
+		</ul>
+		<form class="well form-search" method="post" action="{:U('AdminPost/index')}">
+			选择分类： 
+			<select name="term" style="width: 120px;">
+				<option value='0'>全部</option>{$taxonomys}
+			</select> &nbsp;&nbsp;
+			关键字： 
+			<input type="text" name="keyword" style="width: 120px;" value="{$formget.keyword|default=''}" placeholder="请输入关键字...">&nbsp; &nbsp;
+			时间：
+			<input type="text" name="start_time" class="js-date" value="{$formget.start_time|default=''}" style="width: 120px;" autocomplete="off">-
+			<input type="text" class="js-date" name="end_time" value="{$formget.end_time|default=''}" style="width: 120px;" autocomplete="off"> &nbsp; &nbsp;
+			
+			<input type="submit" class="btn btn-primary" value="查询" />
+			<a class="btn btn-danger" href="{:U('AdminPost/index')}">清空</a>
+		</form>
+		<form class="js-ajax-form" action="" method="post">
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th style="min-width: 50px;text-align: center;">ID</th>
+						<th style="min-width: 100px;text-align: center;">{:L('TITLE')}</th>
+						<th style="min-width: 50px;text-align: center;">分类名称</th>
+						<th style="min-width: 120px;text-align: center;">缩略图</th>
+						<th style="min-width: 120px;text-align: center;">功能描述</th>
+						<th style="min-width: 50px;text-align: center;">关注度</th>
+						<th style="min-width: 50px;text-align: center;">点赞</th>
+						<th style="min-width: 50px;text-align: center;">排序</th>
+						<th style="min-width: 80px;text-align: center;">添加时间</th>
+						<th style="min-width: 100px;text-align: center;">{:L('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<foreach name="posts" item="vo">
+				<tr>
+                    <td style="text-align: center;"><b>{$vo.id}</b></td>
+					<td style="text-align: center;">{$vo.post_title}</td>
+					<td style="text-align: center;">{$vo.cat_name}</td>
+					<td style="text-align: center;"><img src="{$vo.smeta}" style="width: 120px;"></td>
+					<td style="text-align: center;">{$vo.post_excerpt}</td>
+					<td style="text-align: center;">{$vo.agentcount}</td>
+					<td style="text-align: center;">{$vo.likecount}</td>
+					<td style="text-align: center;">{$vo.sort}</td>
+					<td style="text-align: center;">{:date('Y-m-d H:i:s',strtotime($vo['post_date']))}</td>
+					<td style="text-align: center;">
+						<a href="{:U('AdminPost/edit',array('id'=>$vo['id']))}" class=" btn btn-primary" style="padding: 2px 15px;color: white;background-color: #1dccaa;">{:L('EDIT')}</a> 
+						<a href="{:U('AdminPost/delete',array('id'=>$vo['id']))}" class="btn btn-primary js-ajax-delete" style="padding: 2px 15px;color: white;background-color: #1dccaa;">{:L('DELETE')}</a>
+					</td>
+				</tr>
+				</foreach>
+			</table>
+			<div class="pagination" style="float: right;">{$page}</div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script>
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location = "{:U('AdminPost/index',$formget)}";
+			}
+		}
+		setInterval(function() {
+			refersh_window();
+		}, 2000);
+		$(function() {
+			setCookie("refersh_time", 0);
+			Wind.use('ajaxForm', 'artDialog', 'iframeTools', function() {
+				//批量复制
+				$('.js-articles-copy').click(function(e) {
+					var ids=[];
+					$("input[name='ids[]']").each(function() {
+						if ($(this).is(':checked')) {
+							ids.push($(this).val());
+						}
+					});
+					
+					if (ids.length == 0) {
+						art.dialog.through({
+							id : 'error',
+							icon : 'error',
+							content : '您没有勾选信息，无法进行操作！',
+							cancelVal : '关闭',
+							cancel : true
+						});
+						return false;
+					}
+					
+					ids= ids.join(',');
+					art.dialog.open("__ROOT__/index.php?g=portal&m=AdminPost&a=copy&ids="+ ids, {
+						title : "批量复制",
+						width : "300px"
+					});
+				});
+				//批量移动
+				$('.js-articles-move').click(function(e) {
+					var ids=[];
+					$("input[name='ids[]']").each(function() {
+						if ($(this).is(':checked')) {
+							ids.push($(this).val());
+						}
+					});
+					
+					if (ids.length == 0) {
+						art.dialog.through({
+							id : 'error',
+							icon : 'error',
+							content : '您没有勾选信息，无法进行操作！',
+							cancelVal : '关闭',
+							cancel : true
+						});
+						return false;
+					}
+					
+					ids= ids.join(',');
+					art.dialog.open("__ROOT__/index.php?g=portal&m=AdminPost&a=move&old_term_id={$term.term_id|default=0}&ids="+ ids, {
+						title : "批量移动",
+						width : "300px"
+					});
+				});
+			});
+		});
+	</script>
+</body>
+</html>

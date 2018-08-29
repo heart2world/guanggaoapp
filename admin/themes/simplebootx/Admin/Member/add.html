@@ -1,0 +1,98 @@
+<admintpl file="header" />
+<style type="text/css">
+.pic-list li {
+	margin-bottom: 5px;
+}
+</style>
+</head>
+<body>
+	<div class="wrap js-check-wrap" id="app">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('Member/index')}">会员列表</a></li>
+			<li class="active"><a href="javascript:;">新增会员</a></li>
+		</ul>
+		<form class="form-horizontal" id="tagforms" method="post" enctype="multipart/form-data">
+			<fieldset>
+				
+				<div class="control-group">
+					<label class="control-label">电话：</label>
+					<div class="controls">
+						<input type="text" name="mobile" maxlength="11" placeholder="输入电话">
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">角色：</label>
+					<div class="controls">
+						<select name="role_id">
+							<option value="0">请选择角色</option>
+							<volist name="roleids" id="va">
+							<option value="{$va.id}">{$va.rolename}</option>
+							</volist>
+						</select>
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">会员等级：</label>
+					<div class="controls">
+						<select name="level_id">
+							<option value="0">请选择会员等级</option>
+							<volist name="levelids" id="va">
+							<option value="{$va.id}">{$va.levelname}</option>
+							</volist>
+						</select>
+					</div>
+				</div>		
+				<div class="control-group">
+					<label class="control-label">登录密码：</label>
+					<div class="controls">
+						<input type="text" name="user_pass" maxlength="20" placeholder="输入密码">
+					</div>
+				</div>			
+			</fieldset>
+			<div class="form-actions">
+				<input type="button" @click="add()" class="btn btn-primary" value="保存"/>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/vue.js"></script>
+	<script src="__PUBLIC__/js/content_addtop.js"></script>
+	<script src="__PUBLIC__/js/define_my.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+	<script>
+		var app = new Vue({
+			el:"#app",
+			data:{
+				info:{},				
+			},
+			created:function () {
+			},
+			methods:{
+				add:function () {	
+				     var tagvals=$('#tagforms').serialize();				
+					$.ajax({
+						url:'{:U("Admin/Member/add_post")}',
+						data:tagvals,
+						type:"POST",
+						dataType:"json",
+						success:function (res) {							
+							if(res.status==0){
+								$.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+								setInterval(function(){
+									location.href='{:U("Admin/Member/index")}';
+								},3000)
+							}
+							else {
+								$.dialog({id: 'popup', lock: true,icon:"warning", content: res.msg, time: 2});
+							}
+						}
+
+					})
+				}
+			}
+		});	
+
+	</script>
+</body>
+</html>

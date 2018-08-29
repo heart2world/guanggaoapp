@@ -1,0 +1,95 @@
+<admintpl file="header" />
+<style type="text/css">
+.pic-list li {
+	margin-bottom: 5px;
+}
+</style>
+
+</head>
+<body>
+	<div class="wrap js-check-wrap" id="app">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('category/index')}">分类管理</a></li>
+			<li class="active"><a href="javascript:;">编辑分类</a></li>
+		</ul>
+		<form class="form-horizontal" id="tagforms" method="post" enctype="multipart/form-data">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label">分类名称：</label>
+					<div class="controls">
+						<input type="text" name="catname" maxlength="5" value="{$info.catname}" placeholder="名称限制5字以内">
+					</div>
+				</div>
+						
+				<div class="control-group">
+					<label class="control-label">分类图标：</label>
+					<div class="controls">
+						<input type="hidden" name="catimg" id="thumb" value="{$info.catimg}">
+						<a href="javascript:upload_one_image('图片上传','#thumb');">	
+							<if condition="$info['catimg'] neq ''">	
+							<img src="{$info.catimg2}" id="thumb-preview" width="100" height="100" style="cursor: hand" />	
+							<else/>				
+							<img src="__TMPL__Public/assets/images/default-thumbnail.png" id="thumb-preview" width="100" height="100" style="cursor: hand" />
+							</if>
+						</a>
+						<input type="button" class="btn btn-small" onclick="$('#thumb-preview').attr('src','__TMPL__Public/assets/images/default-thumbnail.png');$('#thumb').val('');return false;" value="取消图片">
+					</div><br/>
+					<div style="margin-left: 180px;color: red;">建议图片尺寸：300*300</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label">排序：</label>
+					<div class="controls">
+						<input type="text" name="sortorder" maxlength="3" value="{$info.sortorder}" placeholder="请输入排序序号，序号越小越排前面">
+					</div>
+				</div>
+				
+			</fieldset>
+			<div class="form-actions">
+				<input type="hidden" name="id" value="{$info.id}">
+				<input type="hidden" name="oldcatname" value="{$info.catname}">
+				<input type="button" @click="add()" class="btn btn-primary" value="保存"/>
+				<a class="btn" href="javascript:history.back(-1);">{:L('BACK')}</a>
+			</div>
+		</form>
+	</div>
+	<script type="text/javascript" src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/vue.js"></script>
+	<script src="__PUBLIC__/js/content_addtop.js"></script>
+	<script src="__PUBLIC__/js/define_my.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+	<script>
+		var app = new Vue({
+			el:"#app",
+			data:{
+				info:{},				
+			},
+			created:function () {
+			},
+			methods:{
+				add:function () {	
+				     var tagvals=$('#tagforms').serialize();				
+					$.ajax({
+						url:'{:U("Admin/category/edit_post")}',
+						data:tagvals,
+						type:"POST",
+						dataType:"json",
+						success:function (res) {							
+							if(res.status==0){
+								$.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+								setInterval(function(){
+									location.href='{:U("Admin/category/index")}';
+								},3000)
+							}
+							else {
+								$.dialog({id: 'popup', lock: true,icon:"warning", content: res.msg, time: 2});
+							}
+						}
+
+					})
+				}
+			}
+		});	
+
+	</script>
+</body>
+</html>

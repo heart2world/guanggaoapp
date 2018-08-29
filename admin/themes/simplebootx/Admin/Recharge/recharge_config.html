@@ -1,0 +1,68 @@
+<admintpl file="header" />
+</head>
+<link href="__PUBLIC__/js/jedate/skin/jedate.css" rel="stylesheet">
+<style>
+	.laydate-icon {
+		background: url('/public/js/jedate/skin/jedate.png') no-repeat right;
+	}
+
+	.time {
+		width: 249px;
+		height: 15px;
+		line-height: 15px;
+		padding: 6px 0 6px 10px;
+		border: 1px solid #C1C1C1;
+	}
+
+	.table tr th, .table tr td {
+		text-align: center;
+	}
+</style>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('Recharge/index')}">充值记录</a></li>
+			<li class="active"><a href="javascript:;">充值设置</a></li>
+			<li><a href="{:U('Recharge/balance_statement')}">余额明细</a></li>
+		</ul>
+		<form class="js-ajax-form" action="" method="post">
+			<div style="margin-top: 30px;margin-left: 60px;">
+				<label>充值&emsp;<input style="width: 100px" type="text" name="below" id="below" value="{$config.below}">&emsp;元以内&emsp;&emsp;返&emsp;<input style="width: 70px" type="text" id="below_rate" name="below_rate" value="{$config.below_rate}">&emsp;%</label>
+				<label>充值&emsp;<input style="width: 100px" type="text" name="middle1" id="middle1" value="{$config.middle_below}">&emsp;元到&emsp;<input style="width: 100px" type="text" name="middle2" id="middle2" value="{$config.middle_above}">&emsp;元&emsp;&emsp;返&emsp;<input style="width: 70px" type="text" id="rate" name="rate" value="{$config.middle_rate}">&emsp;%</label>
+				<label>充值&emsp;<input style="width: 100px" type="text" name="above" id="above" value="{$config.above}">&emsp;元以上&emsp;&emsp;返&emsp;<input style="width: 70px" type="text" id="above_rate" name="above_rate" value="{$config.above_rate}">&emsp;%</label>
+			</div>
+			<div style="margin-top: 30px;margin-left: 200px"><a class="btn btn-success" onclick="add_config()">保存</a></div>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+	<script type="text/javascript">
+        //已付款
+        function add_config() {
+            var below = $('#below').val();
+            var below_rate = $('#below_rate').val();
+            var middle1 = $('#middle1').val();
+            var middle2 = $('#middle2').val();
+            var rate = $('#rate').val();
+            var above = $('#above').val();
+            var above_rate = $('#above_rate').val();
+            $.ajax({
+                url:'{:U("Recharge/add_config")}',
+                data:{below:below,below_rate:below_rate,middle_below:middle1,middle_above:middle2,middle_rate:rate,above:above,above_rate:above_rate},
+                type:'POST',
+                dataType:'json',
+                success:function (res) {
+                    if (res.code == 1) {
+                        // layer.alert('操作成功', {icon: 6});
+                        $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                        setTimeout("location.reload()",2000);
+                    }else {
+                        $.dialog({id: 'popup', lock: true,icon:"succeed", content: res.msg, time: 2});
+                    }
+                }
+            })
+        }
+	</script>
+</body>
+</html>

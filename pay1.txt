@@ -1,0 +1,18 @@
+SimpleXMLElement::__set_state(array(
+   'appid' => 'wxc350dab77ece49d1',
+   'bank_type' => 'CFT',
+   'cash_fee' => '1',
+   'fee_type' => 'CNY',
+   'is_subscribe' => 'N',
+   'mch_id' => '1513378551',
+   'nonce_str' => 'DQyhGQe0RjGuxL074iXTa1SbSTnumJbg',
+   'openid' => 'oUlQi5vZDYCvNk37orcsqlK1lK8E',
+   'out_trade_no' => '20180829519851501535524643',
+   'result_code' => 'SUCCESS',
+   'return_code' => 'SUCCESS',
+   'sign' => 'A85B6846F078CF1C4C988AC25694F0A7',
+   'time_end' => '20180829143729',
+   'total_fee' => '1',
+   'trade_type' => 'APP',
+   'transaction_id' => '4200000164201808298337453954',
+))

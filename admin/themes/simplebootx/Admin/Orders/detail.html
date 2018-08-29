@@ -1,0 +1,100 @@
+<admintpl file="header" />
+</head>
+<link href="__PUBLIC__/js/jedate/skin/jedate.css" rel="stylesheet">
+<style>
+	.table tr th, .table tr td {
+		text-align: center;
+	}
+	div{
+		margin-bottom: 5px;
+	}
+</style>
+<body>
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Orders/index')}">订单管理</a></li>
+		</ul>
+		<form class="js-ajax-form" action="" method="post" style="margin-left: 70px">
+			<div>订单编号：{$order.orderno}</div>
+			<div>
+				付款方式：
+				<if condition="$order.paytype eq 1">
+					微信支付
+				</if>
+				<if condition="$order.paytype eq 2">
+					支付宝支付
+				</if>
+				<if condition="$order.paytype eq 3">
+					微信支付
+				</if>
+				<if condition="$order.paytype eq 4">
+					赊账
+				</if>
+				<if condition="$order.paytype eq 5">
+					赊账/已还款
+				</if>
+			</div>
+			<div>买家：{$member.nickname}/{$member.mobile}</div>
+			<div>收货人：{$order.province}&nbsp;{$order.city}&nbsp;{$order.district}&nbsp;{$order.street}&nbsp;{$order.detail_address}&nbsp;{$order.receive_name}{$order.receive_mobile}</div>
+			<div style="margin-bottom: 30px">买家备注：{$order.remark}</div>
+			<div style="margin-bottom: 30px">
+				订单状态：
+				<if condition="$order.status eq 1">
+					已完成
+				</if>
+				<if condition="$order.status eq 2">
+					待支付
+				</if>
+				<if condition="$order.status eq 3">
+					待发货
+				</if>
+				<if condition="$order.status eq 4">
+					待收货
+				</if>
+			</div>
+			<div style="margin-bottom: 30px">
+				发货时间：
+				<if condition="$order.send_time neq 0">
+					<?= date('Y-m-d H:i:s',$order['send_time'])?>
+					<else/>
+					暂无
+				</if>
+			</div>
+			<div style="margin-bottom: 30px">
+				收货时间：
+				<if condition="$order.receive_time neq 0">
+					<?= date('Y-m-d H:i:s',$order['receive_time'])?>
+					<else/>
+					暂无
+				</if>
+			</div>
+			<label>商品信息</label>
+			<table class="table table-hover table-bordered table-list" style="width: 800px">
+				<thead>
+					<tr>
+						<th style="min-width: 100px;text-align: center;">商品名称</th>
+						<th style="min-width: 30px;text-align: center;">规格</th>
+						<th style="min-width: 100px;text-align: center;">单价</th>
+						<th style="min-width: 100px;text-align: center;">数量</th>
+						<th style="min-width: 100px;text-align: center;">原价</th>
+						<th style="min-width: 50px;text-align: center;">折后价</th>
+					</tr>
+				</thead>
+				<foreach name="goods" item="vo">
+					<tr>
+						<td style="text-align: center;">{$vo.goodsname}</td>
+						<td style="text-align: center;">{$vo.specification}</td>
+						<td style="text-align: center;">{$vo.price}</td>
+						<td style="text-align: center;">{$vo.number}</td>
+						<td style="text-align: center;">￥<?= $vo['price']*$vo['number'] ?></td>
+						<td style="text-align: center;">￥<?= $vo['current_price']*$vo['number'] ?></td>
+					</tr>
+				</foreach>
+			</table>
+		</form>
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+	<script src="__PUBLIC__/js/layer/layer.js"></script>
+	<script src="__PUBLIC__/js/artDialog/artDialog.js"></script>
+</body>
+</html>

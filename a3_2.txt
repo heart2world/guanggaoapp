@@ -1,0 +1,11 @@
+array (
+  'return_code' => 'SUCCESS',
+  'return_msg' => 'OK',
+  'appid' => 'wxc350dab77ece49d1',
+  'mch_id' => '1513378551',
+  'nonce_str' => 'GH3ennQMlQgLONeq',
+  'sign' => '38088045B3858A3F06967C48FC8F799D',
+  'result_code' => 'SUCCESS',
+  'prepay_id' => 'wx291438054168399385c71faa2201976557',
+  'trade_type' => 'APP',
+)
